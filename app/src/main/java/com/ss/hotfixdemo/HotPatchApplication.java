@@ -4,6 +4,9 @@ import android.app.Application;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ss.hotfixdemo.core.HotPatchManager;
+import com.ss.hotfixdemo.core.IPatch;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -15,16 +18,18 @@ import dalvik.system.DexClassLoader;
  */
 
 public class HotPatchApplication extends Application {
+    private static final String PATCH_DEX_PATH = "/aapatch_demo/patch_dex.jar";
+    private static final String HACK_DEX_PATH = "/aapatch_demo/hack_dex.jar";
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        IPatch patchManager = new HotPatchManager();
         //加载单独生成的一个dex
-        doPatch("/aapatch_demo/hack_dex.jar");
-
-        // 加载补丁包
-        doPatch("/aapatch_demo/patch_dex.jar");
+        patchManager.loadPath(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + HACK_DEX_PATH);
+        // 加载补丁dex
+        patchManager.loadPath(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + PATCH_DEX_PATH);
 
     }
 
