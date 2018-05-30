@@ -1,1 +1,1 @@
-include ':app', ':buildsrc', ':hack', ':classpatch'
+include ':app', ':buildsrc', ':hack', ':classpatch', ':nowfix'

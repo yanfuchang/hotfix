@@ -4,8 +4,6 @@ import android.app.Application;
 import android.os.Environment;
 import android.util.Log;
 
-import com.ss.hotfixdemo.core.HotPatchManager;
-import com.ss.hotfixdemo.core.IPatch;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -25,14 +23,12 @@ public class HotPatchApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        IPatch patchManager = new HotPatchManager();
         //加载单独生成的一个dex
-        patchManager.loadPath(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + HACK_DEX_PATH);
-        // 加载补丁dex
-        patchManager.loadPath(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + PATCH_DEX_PATH);
+        doPatch("/aapatch_demo/hack_dex.jar");
 
+        // 加载补丁包
+        doPatch("/aapatch_demo/patch_dex.jar");
     }
-
 
     private void doPatch(String path) {
         String p = Environment.getExternalStorageDirectory().getAbsolutePath() + path;
@@ -54,6 +50,7 @@ public class HotPatchApplication extends Application {
             Object pathList = getField(cl, "pathList", getClassLoader());
             //获取 DexPathList 对象中的 dexElements 数组
             Object baseElements = getField(pathList.getClass(), "dexElements", pathList);
+            Log.e("HotPatchApplication", " base_dex length = " + Array.getLength(baseElements));
 
             // 获取patch_dex的dexElements（需要先加载dex）
             String dexopt = getDir("dexopt", 0).getAbsolutePath();
@@ -61,10 +58,11 @@ public class HotPatchApplication extends Application {
             Object obj = getField(cl, "pathList", dexClassLoader);
             Object dexElements = getField(obj.getClass(), "dexElements", obj);
 
-            Log.e("HotPatchApplication", "length = " + Array.getLength(dexElements));
+            Log.e("HotPatchApplication", " hack_dex length = " + Array.getLength(dexElements));
 
             // 合并两个 Elements 数组
             Object combineElements = combineArray(dexElements, baseElements);
+
 
             // 将合并后的Element数组重新赋值给app的classLoader
             setField(pathList.getClass(), "dexElements", pathList, combineElements);
@@ -72,7 +70,7 @@ public class HotPatchApplication extends Application {
             //======== 以下是测试是否成功注入 =================
             Object object = getField(pathList.getClass(), "dexElements", pathList);
             int length = Array.getLength(object);
-            Log.e("HotPatchApplication", "length = " + length);
+            Log.e("HotPatchApplication", "合并length = " + length);
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

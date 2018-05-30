@@ -4,11 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.ss.hotfixdemo.MainActivity">
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/a"/>
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:text="向日葵"/>
+    <TextView
+
+        android:id="@+id/cost"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:text="价格：10"/>
 
     <Button
         android:id="@+id/main_shot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="I am a dog!"/>
+        android:text="显示价格"/>
+    <Button
+        android:id="@+id/moni"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="立即修复"/>
 </LinearLayout>
