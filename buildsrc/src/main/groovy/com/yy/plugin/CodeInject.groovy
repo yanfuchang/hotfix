@@ -4,6 +4,7 @@ import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtConstructor
 import javassist.CtMethod
+import org.gradle.api.Project
 
 class CodeInject {
     private static ClassPool pool = ClassPool.getDefault()
@@ -24,13 +25,16 @@ class CodeInject {
      * --- 3. Application
      * @param path 目录的路径
      */
-    static void injectDir(String path) {
+    static void injectDir(String path,Project project) {
+        System.out.println("++++++开始插入+++++++")
         pool.appendClassPath(path)
+//        pool.appendClassPath(project.android.bootClasspath[0].toString())
         File dir = new File(path)
         if (dir.isDirectory()) {
+            System.out.println("++++++进入目录+++++++")
             dir.eachFileRecurse { File file ->
-
                 String filePath = file.absolutePath
+                System.out.println("++++++获取类文件+++++++   " + filePath)
                 if (filePath.endsWith(".class")
                         && !filePath.contains('R$')
                         && !filePath.contains('R.class')
@@ -38,10 +42,11 @@ class CodeInject {
                         // 这里是application的名字，可以通过解析清单文件获得，先写死了
                         && !filePath.contains("HotPatchApplication.class")) {
                     // 这里是应用包名，也能从清单文件中获取，先写死
-                    int index = filePath.indexOf("com/ss/hotfixdemo")
+                    int index = filePath.indexOf("com\\ss\\hotfixdemo")
                     if (index != -1) {
                         int end = filePath.length() - 6 // .class = 6
-                        String className = filePath.substring(index, end).replace('/', '.').replace('/', '.')
+                        String className = filePath.substring(index, end).replace('\\', '.').replace('\\', '.')
+                        System.out.println("++++++类名转换++++  " + className)
                         injectClass(className, path)
                     }
                 }
@@ -50,7 +55,6 @@ class CodeInject {
     }
 
     private static void injectClass(String className, String path) {
-        println(className)
         CtClass c = pool.getCtClass(className)
         if (c.isFrozen()) {
             c.defrost()
@@ -62,9 +66,11 @@ class CodeInject {
             insertNewConstructor(c)
         } else {
             cts[0].insertBeforeBody("System.out.println(com.yan.hack.LazyHack.class);")
+//            cts[0].insertBeforeBody("System.out.println(666);")
         }
         c.writeFile(path)
         c.detach()
+        System.out.println("写回：name : " + className +"   ---path---   " + path)
     }
 
     private static void insertNewConstructor(CtClass c) {

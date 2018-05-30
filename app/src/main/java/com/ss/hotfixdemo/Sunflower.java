@@ -1,5 +1,5 @@
 package com.ss.hotfixdemo;
 
 public class Sunflower {
-    public String name = "玫瑰";
+    public String name = "向日葵";
 }

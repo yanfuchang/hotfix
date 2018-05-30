@@ -12,9 +12,9 @@ class PreDexTransform extends Transform {
     PreDexTransform(Project project) {
         this.project = project
 
-        def libPath = project.project(':hack').buildDir.absolutePath.concat("/intermediates/classes/debug")
+        def libPath = project.project(':hack').buildDir.absolutePath.concat("\\intermediates\\classes\\debug")
         CodeInject.appendClassPath(libPath)
-        CodeInject.appendClassPath("C:/Users/Yan fuchang/AppData/Local/Android/Sdk/platforms/android-27/android.jar")
+        CodeInject.appendClassPath("C:\\Users\\Yan fuchang\\AppData\\Local\\Android\\Sdk\\platforms\\android-26\\android.jar")
     }
 
     /**
@@ -67,7 +67,7 @@ class PreDexTransform extends Transform {
             input.directoryInputs.each { DirectoryInput directoryInput ->
 
                 //TODO 注入代码
-                CodeInject.injectDir(directoryInput.file.absolutePath)
+                CodeInject.injectDir(directoryInput.file.absolutePath, project)
                 System.out.print("dirPath:  " + directoryInput.file.absolutePath)
 
                 // 获取output目录
