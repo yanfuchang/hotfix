@@ -19,24 +19,6 @@
         android:layout_height="60dp"
         android:textSize="24sp"
         android:gravity="center"
-        android:text="向日葵"/>
-    <TextView
+        />
 
-        android:id="@+id/cost"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:text="价格：10"/>
-
-    <Button
-        android:id="@+id/main_shot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="显示价格"/>
-    <Button
-        android:id="@+id/moni"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="立即修复"/>
 </LinearLayout>
