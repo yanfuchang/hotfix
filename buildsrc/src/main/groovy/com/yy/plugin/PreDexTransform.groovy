@@ -3,6 +3,7 @@ package com.yy.plugin
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.android.utils.FileUtils
+import com.ss.asmcore.InsertClassFile
 import org.gradle.api.Project
 
 class PreDexTransform extends Transform {
@@ -14,6 +15,10 @@ class PreDexTransform extends Transform {
 
         def libPath = project.project(':hack').buildDir.absolutePath.concat("\\intermediates\\classes\\debug")
         CodeInject.appendClassPath(libPath)
+
+        def patchPath = project.project(':nowfix').buildDir.absolutePath.concat("\\intermediates\\classes\\debug")
+        CodeInject.appendClassPath(patchPath)
+
         CodeInject.appendClassPath("C:\\Users\\Yan fuchang\\AppData\\Local\\Android\\Sdk\\platforms\\android-26\\android.jar")
     }
 

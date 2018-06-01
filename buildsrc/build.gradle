@@ -3,6 +3,10 @@ apply plugin: 'groovy'
 repositories {
     jcenter()
     google()
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -10,4 +14,5 @@ dependencies {
     compile localGroovy()
     compile 'com.android.tools.build:gradle:3.0.0'
     compile 'org.javassist:javassist:3.20.0-GA'
+    compile group: 'org.ow2.asm', name: 'asm', version: '4.0'
 }

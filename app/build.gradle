@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: com.yy.plugin.Register
+apply plugin: com.yy.plugin.Register
 
 android {
     compileSdkVersion 26
