@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/hack/hack.iml" filepath="$PROJECT_DIR$/hack/hack.iml" />
       <module fileurl="file://$PROJECT_DIR$/hotfix.iml" filepath="$PROJECT_DIR$/hotfix.iml" />
       <module fileurl="file://$PROJECT_DIR$/nowfix/nowfix.iml" filepath="$PROJECT_DIR$/nowfix/nowfix.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nowpatch/nowpatch.iml" filepath="$PROJECT_DIR$/nowpatch/nowpatch.iml" />
     </modules>
   </component>
 </project>

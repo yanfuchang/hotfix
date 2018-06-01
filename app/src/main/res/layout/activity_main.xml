@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ss.hotfixdemo.MainActivity">
+    tools:context="com.ss.hotfixdemo.clzpatch.MainActivity">
 
     <ImageView
         android:id="@+id/img"
@@ -15,6 +15,13 @@
         android:src="@mipmap/a"/>
     <TextView
         android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="24sp"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/cost"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textSize="24sp"

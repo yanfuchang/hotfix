@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/classpatch" />
             <option value="$PROJECT_DIR$/hack" />
             <option value="$PROJECT_DIR$/nowfix" />
+            <option value="$PROJECT_DIR$/nowpatch" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

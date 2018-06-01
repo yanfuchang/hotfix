@@ -1,13 +1,21 @@
-package com.ss.hotfixdemo;
+package com.ss.hotfixdemo.clzpatch;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
 
+import com.tt.nowfix.core.ChangeQuickRedirect;
+import com.tt.nowfix.core.PatchedClassInfo;
+import com.tt.nowfix.core.PatchesInfo;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.logging.Logger;
 
 import dalvik.system.DexClassLoader;
 
@@ -19,15 +27,77 @@ public class HotPatchApplication extends Application {
     private static final String PATCH_DEX_PATH = "/aapatch_demo/patch_dex.jar";
     private static final String HACK_DEX_PATH = "/aapatch_demo/hack_dex.jar";
 
+    private DexClassLoader mLoader;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+//        boolean isSucc = loadDex(base);
+//        Log.d("HotPatchApplication", "load dex issucc:"+isSucc);
+//        if(isSucc){
+//            Log.d("HotPatchApplication", "start patch");
+//            patch();
+//        }
+        super.attachBaseContext(base);
+
+    }
+
+    @SuppressLint({ "SdCardPath"})
+    private boolean loadDex(Context ctx){
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/aapatch_demo/nowpatch_dex.jar";
+
+        File dexFile = new File(path);
+        if(!dexFile.exists()){
+            Log.d("HotPatchApplication", "patch.dex is not exist!");
+            return false;
+        }
+
+        try{
+            File odexDir = new File(ctx.getFilesDir()+File.separator+"odex"+File.separator);
+            if(!odexDir.exists()){
+                odexDir.mkdirs();
+            }
+            mLoader = new DexClassLoader(dexFile.getAbsolutePath(),  odexDir.getAbsolutePath(), null, ctx.getClassLoader());
+            Log.i("HotPatchApplication", "mloader;"+ mLoader);
+            return true;
+        }catch(Throwable e){
+            Log.d("HotPatchApplication", "load patch error:"+Log.getStackTraceString(e));
+        }
+        return false;
+    }
+
+    @SuppressLint("NewApi")
+    private void patch(){
+        try{
+            //先得到修复包中的PatchesInfoImpl类
+            Class<?> patchInfoClazz = mLoader.loadClass("com.ss.nowpatch.PatchesInfoImpl");
+            PatchesInfo patchInfo = (PatchesInfo)patchInfoClazz.newInstance();
+            //获取修复包中所有待修复类信息
+            List<PatchedClassInfo> infoList = patchInfo.getPatchedClassesInfo();
+            for(PatchedClassInfo info : infoList){
+                //加载所有修复类对象
+                ChangeQuickRedirect redirectObj = (ChangeQuickRedirect)mLoader.loadClass(
+                        info.getPatchClassName()).newInstance();
+                //获取待修复旧类类型
+                Class<?> fixClass = mLoader.loadClass(info.getFixClassName());
+                //将修复类对象设置到待修复旧类的changeQuickRedirect变量中
+                Field redirectF = fixClass.getField("changeQuickRedirect");
+                redirectF.set(null, redirectObj);
+            }
+            Log.d("HotPatchApplication", "patch succ");
+        }catch(Throwable e){
+            Log.d("HotPatchApplication", "patch error:"+Log.getStackTraceString(e));
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        //加载单独生成的一个dex
-        doPatch("/aapatch_demo/hack_dex.jar");
-
-        // 加载补丁包
-        doPatch("/aapatch_demo/patch_dex.jar");
+//        //加载单独生成的一个dex
+//        doPatch("/aapatch_demo/hack_dex.jar");
+//
+//        // 加载补丁包
+//        doPatch("/aapatch_demo/patch_dex.jar");
     }
 
     private void doPatch(String path) {
