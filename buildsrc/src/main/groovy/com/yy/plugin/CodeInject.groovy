@@ -36,10 +36,17 @@ class CodeInject {
         pool.appendClassPath(path)
 //        pool.appendClassPath(project.android.bootClasspath[0].toString())
         File dir = new File(path)
+
+
+        String mode = getMode(project)
+        System.out.println("修复模式：  " + mode)
+
         if (dir.isDirectory()) {
             System.out.println("++++++进入目录+++++++")
             dir.eachFileRecurse { File file ->
                 String filePath = file.absolutePath
+                System.out.println("遍历到：" + filePath)
+
                 if (shouldInsertCode(filePath)) {
                     System.out.println("++++++获取类文件+++++++   " + filePath)
                     // 这里是应用包名，也能从清单文件中获取，先写死
@@ -48,12 +55,26 @@ class CodeInject {
                         int end = filePath.length() - 6 // .class = 6
                         String className = filePath.substring(index, end).replace('\\', '.').replace('\\', '.')
                         System.out.println("++++++类名转换++++  " + className)
-//                        injectClass(className, path)
-                        insertCode(className, path)
+
+                        if (mode.equals("1")) {
+                            injectClass(className, path)
+                        } else {
+                            insertCode(className, path)
+                        }
                     }
                 }
             }
         }
+    }
+
+
+    static String getMode(Project project) {
+        Properties properties = new Properties();
+        InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+        properties.load(inputStream)
+
+        String mode = properties.getProperty('HOTFIX_MODE')
+        return mode
     }
 
     /**

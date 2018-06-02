@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# keep everything in this package from being removed or renamed
+-keep class com.tt.nowfix.core.** { *; }
+
+# keep everything in this package from being renamed only
+-keepnames class com.tt.nowfix.core.** { *; }

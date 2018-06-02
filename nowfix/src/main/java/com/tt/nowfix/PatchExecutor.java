@@ -79,28 +79,28 @@ public class PatchExecutor extends Thread {
         Class patchClass, oldClass;
 
         Class patchsInfoClass;
-        PatchesInfo patchesInfo = null;
+        PatchesInfoL patchesInfoL = null;
         try {
             patchsInfoClass = classLoader.loadClass(patch.getPatchesInfoImplClassFullName());
-            patchesInfo = (PatchesInfo) patchsInfoClass.newInstance();
+            patchesInfoL = (PatchesInfoL) patchsInfoClass.newInstance();
             Log.d(TAG, "PatchsInfoImpl ok");
         } catch (Throwable t) {
             t.printStackTrace();
         }
 
-        if (patchesInfo == null) {
+        if (patchesInfoL == null) {
             return false;
         }
 
         //获取需要打补丁的类
-        List<PatchedClassInfo> patchedClasses = patchesInfo.getPatchedClassesInfo();
+        List<PatchedClassInfoL> patchedClasses = patchesInfoL.getPatchedClassesInfo();
         if (null == patchedClasses || patchedClasses.isEmpty()) {
             return false;
         }
 
-        for (PatchedClassInfo patchedClassInfo : patchedClasses) {
-            String patchedClassName = patchedClassInfo.patchedClassName;
-            String patchClassName = patchedClassInfo.patchClassName;
+        for (PatchedClassInfoL patchedClassInfoL : patchedClasses) {
+            String patchedClassName = patchedClassInfoL.patchedClassName;
+            String patchClassName = patchedClassInfoL.patchClassName;
             if (TextUtils.isEmpty(patchedClassName) || TextUtils.isEmpty(patchClassName)) {
                 continue;
             }

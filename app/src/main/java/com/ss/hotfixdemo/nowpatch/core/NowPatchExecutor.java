@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ss.hotfixdemo.nowpatch.PatchImpl;
 import com.tt.nowfix.core.ChangeQuickRedirect;
 import com.tt.nowfix.core.PatchedClassInfo;
 import com.tt.nowfix.core.PatchesInfo;
@@ -73,6 +74,11 @@ public class NowPatchExecutor {
 
     @SuppressLint("NewApi")
     private void patch(){
+        PatchesInfo d = new PatchImpl();
+        Log.d("HotPatchApplication", "成功找到：" + d.getClass().getCanonicalName());
+        Log.d("HotPatchApplication", "成功找到：" + PatchesInfo.class.getCanonicalName());
+
+
         try{
             //先得到修复包中的PatchesInfoImpl类
             Class<?> patchInfoClazz = mLoader.loadClass("com.ss.nowpatch.PatchesInfoImpl");
